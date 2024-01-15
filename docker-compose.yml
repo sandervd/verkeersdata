@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  ldio-workbench:
+    container_name: ldio-workbench
+    image: ldes/ldi-orchestrator:1.12.0-SNAPSHOT
+    volumes:
+      - ./ldio.config.yml:/ldio/application.yml:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      graphdb:
+        condition: service_healthy
+
+  graphdb:
+    build: .
+    ports:
+      - "7200:7200"
+    volumes:
+      - graphdb-data:/opt/graphdb/home
+    healthcheck:
+      test: [
+        "CMD", "sh", "-c", "/opt/graphdb/dist/bin/healthy.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 2m
+
+volumes:
+  graphdb-data:

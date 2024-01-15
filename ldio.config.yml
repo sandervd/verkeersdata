@@ -1,0 +1,19 @@
+orchestrator:
+  pipelines:
+  - name: my-ldes-pipeline
+    input:
+      name: be.vlaanderen.informatievlaanderen.ldes.ldi.client.LdioLdesClient
+      config:
+        url: "https://geomobility.essentialcomplexity.eu/observations"
+        source-format: text/turtle
+    transformers:
+    - name: be.vlaanderen.informatievlaanderen.ldes.ldi.VersionMaterialiser
+      versionOf-property: "http://purl.org/dc/terms/isVersionOf"
+    outputs:
+    - name: be.vlaanderen.informatievlaanderen.ldes.ldi.RepositoryMaterialiser
+      config:
+        sparql-host: "http://graphdb:7200/"
+        repository-id: "test-repo"
+        named-graph: "http://geomobility/"
+            # Additional configurations like auth, headers, etc.
+
